@@ -32,4 +32,9 @@ public class User implements IUser {
     public boolean sendMessage(String msg) {
         return false;
     }
+
+    public String toString(){
+        String retorno = "Nome: " + name + "; Host:"+host+":"+door;
+        return retorno;
+    }
 }
