@@ -20,12 +20,12 @@ public class User implements IUser {
 
     @Override
     public void setName(String name) {
-
+        this.name = name;
     }
 
     @Override
     public String getName(String name) {
-        return null;
+        return this.name;
     }
 
     @Override
