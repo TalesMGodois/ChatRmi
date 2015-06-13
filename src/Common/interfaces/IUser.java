@@ -6,7 +6,7 @@ package Common.interfaces;
 public interface IUser {
 
     public void setName(String name);
-    public String  getName(String name);
+    public String  getName();
     public boolean sendMessage(String msg);
 
 

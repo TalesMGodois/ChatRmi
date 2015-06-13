@@ -24,7 +24,7 @@ public class User implements IUser {
     }
 
     @Override
-    public String getName(String name) {
+    public String getName() {
         return this.name;
     }
 
