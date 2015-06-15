@@ -11,7 +11,7 @@ import java.rmi.registry.Registry;
 public class Host {
     private int door = 1901;
 
-    private String ip = "localhost";
+    private String ip = "127.0.1.1";
 
     private boolean isRun = false;
 
@@ -43,7 +43,6 @@ public class Host {
 
         System.setProperty("java.rmi.server.hostname", ip);
         System.setProperty("java.security.policy", "java.policy");
-//        System.setProperty("java.security.policy","file:./security.policy");
         System.setSecurityManager(new RMISecurityManager());
 
         Registry r = LocateRegistry.createRegistry(this.door);
@@ -54,6 +53,8 @@ public class Host {
         synchronized (lock) {
             lock.wait();
         }
+
+
 
     }
 }

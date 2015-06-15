@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by tales on 07/06/15.
  */
-public class Group implements IGroup {
+public class Group  {
 
     private ArrayList<IUser> USERS;
 
@@ -21,19 +21,18 @@ public class Group implements IGroup {
     *   Inserir um usuario quando for pedido a entrada
     * */
 
-    @Override
-    public void addUser(IUser user) {
-        if(!this.USERS.contains(user))
+    public boolean addUser(IUser user) {
+        if(!this.USERS.contains(user)){
             this.USERS.add(user);
-        else
-            System.out.println("Usuário já está online");
+            return  true;
+        }else return false;
+
     }
 
     /*
     *   Fazer remocao de um usuario quando for deslogado
     * */
 
-    @Override
     public void removeUser(IUser user) {
         if(this.USERS.contains(user))
             this.USERS.remove(user);
@@ -41,11 +40,9 @@ public class Group implements IGroup {
             System.out.println("Usuário não está online");
     }
 
-
     /*
     *   Remover todos os usuarios online caso necessario
     * */
-    @Override
     public void removeAll() {
         if(this.USERS.size() > 0) {
             this.USERS.clear();
@@ -60,7 +57,6 @@ public class Group implements IGroup {
     *   Imprime todos os usuario online
     * */
 
-    @Override
     public void listUsers() {
         for(Object i:this.USERS){
             System.out.printf(i.toString());

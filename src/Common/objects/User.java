@@ -1,22 +1,63 @@
 package Common.objects;
 
+import Common.interfaces.IGroup;
+import Common.interfaces.IMessage;
 import Common.interfaces.IUser;
+
+import java.io.Serializable;
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 /**
  * Created by tales on 07/06/15.
  */
-public class User implements IUser {
+public class User implements IUser,Serializable{
     private String name;
-    private String id;
+    private String ip = "localhost";
     private String email;
     private String host;
-    private int door;
+    private int door = 1901;
 
 
     public User(String name){
         setName(name);
     }
 
+    public void setIp(String id) {
+        this.ip = ip;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setDoor(int door) {
+        this.door = door;
+    }
+
+    public String getIp() {
+
+        return ip;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getDoor() {
+        return door;
+    }
 
     @Override
     public void setName(String name) {
@@ -29,11 +70,15 @@ public class User implements IUser {
     }
 
     @Override
-    public boolean sendMessage(String msg) {
-        return false;
+    public boolean sendMessage(IMessage msg) throws RemoteException, NotBoundException, AlreadyBoundException {
+        Registry r = LocateRegistry.getRegistry(ip, door);
+        IGroup group = (IGroup) r.lookup("ChatService");
+        msg.setuser(this);
+        return  group.addMessage(msg);
     }
 
     public String toString(){
+
         String retorno = "Nome: " + name + "; Host:"+host+":"+door;
         return retorno;
     }
