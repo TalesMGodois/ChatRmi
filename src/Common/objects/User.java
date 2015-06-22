@@ -28,7 +28,7 @@ public class User implements IUser,Serializable{
         setName(name);
     }
 
-    public void setIp(String id) {
+    public void setIp(String ip) {
         this.ip = ip;
     }
 
@@ -82,9 +82,4 @@ public class User implements IUser,Serializable{
         return  group.addMessage(msg);
     }
 
-    public String toString(){
-
-        String retorno = "Nome: " + name + "; Host:"+host+":"+door;
-        return retorno;
-    }
 }

@@ -3,8 +3,7 @@ package br.com.ufg.sd.chat.Server;
 import Common.interfaces.IMessage;
 import Common.interfaces.IReceiver;
 
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -26,13 +25,18 @@ public class TSendMessage implements Runnable {
 
         try {
             Registry r = LocateRegistry.getRegistry(msg.getIp(), msg.getDoor());
-            IReceiver client = (IReceiver) r.lookup("Receiver");
+            IReceiver client = (IReceiver)r.lookup("ReceiverService");
             client.receive(this.message);
+        } catch (NotBoundException e){
+        e.printStackTrace();
+        } catch (AccessException e) {
+            e.printStackTrace();
+        } catch (ConnectException e){
+            System.out.println("Servidor Temporariamente indisponível");
         } catch (RemoteException e) {
             e.printStackTrace();
-        } catch (NotBoundException e) {
+        } catch (AlreadyBoundException e) {
             e.printStackTrace();
         }
-
     }
 }

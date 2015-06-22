@@ -35,8 +35,6 @@ public class TSendMonitor implements Runnable {
             } catch (AlreadyBoundException e) {
                 e.printStackTrace();
             }
-
         }
-
     }
 }

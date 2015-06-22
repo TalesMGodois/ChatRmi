@@ -13,12 +13,9 @@ import java.rmi.server.ExportException;
  */
 public class Host {
     private int door = 1902;
-
     private String ip = "127.0.1.1";
+    private String sName = "ReceiverService";
 
-    private boolean isRun = false;
-
-    private String sName = "Receiver";
 
     private Host(int port){
         this.door = port;
@@ -50,26 +47,20 @@ public class Host {
             e.printStackTrace();
         }
 
+        System.out.println("Servidor " + this.sName + " Rodando(" + this.ip + ":" + this.door + ")");
+
         System.setProperty("java.rmi.server.hostname", ip);
         System.setProperty("java.security.policy", "java.policy");
         System.setSecurityManager(new RMISecurityManager());
-        try{
 
-            Registry r = LocateRegistry.createRegistry(this.door);
-            r.bind(sName, new Receiver());
-        }catch(ExportException e){
-            this.door = this.door +1;
-            Registry r = LocateRegistry.createRegistry(this.door);
-            r.bind(sName, new Receiver());
-        }
+        Registry r = LocateRegistry.createRegistry(this.door);
 
-        System.out.println("Servidor " + this.sName + " Rodando(" + this.ip + ":" + this.door + ")");
+        r.bind(sName, new Receiver());
+
         Object lock = new Object();
         synchronized (lock) {
             lock.wait();
         }
-
-
 
     }
 }
