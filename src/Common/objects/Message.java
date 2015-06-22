@@ -9,6 +9,24 @@ import Common.interfaces.IUser;
 public class Message implements IMessage{
     private IUser user;
     private String msg;
+    private String ip;
+    private int door;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getDoor() {
+        return door;
+    }
+
+    public void setDoor(int door) {
+        this.door = door;
+    }
 
     public Message(String message){
         this.msg = message;
@@ -30,7 +48,7 @@ public class Message implements IMessage{
     }
 
     @Override
-    public void setuser(IUser user) {
+    public void setUser(IUser user) {
         this.user = user;
     }
 }

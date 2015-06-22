@@ -3,15 +3,15 @@ package br.com.ufg.sd.chat.Server;
 import Common.interfaces.IGroup;
 import Common.interfaces.IMessage;
 import Common.interfaces.IUser;
-
-import java.net.InetAddress;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by tales on 13/06/15.
@@ -19,28 +19,47 @@ import java.util.ArrayList;
 public class Server extends UnicastRemoteObject implements IGroup {
 
     private static ArrayList<IUser> USERS;
+    private static ExecutorService EXECS;
+    private static Queue<TSendMessage> MessagesQUEUE;
+    private static int thrads = 0;
 
     private static final long serialVersionUID = -8550306338084922644L;
 
     protected Server() throws RemoteException {
         super();
         USERS = new ArrayList<IUser>();
+        this.EXECS = Executors.newFixedThreadPool(10);
+        this.MessagesQUEUE = new PriorityQueue<TSendMessage>();
 
-//        TListMessages listMessages= new TListMessages();
-//        Thread t1 = new Thread(listMessages);
-//        t1.start();
     }
+
+    private void insertMessageOnThread(IMessage msg){
+        thrads++;
+        TSendMessage tmsg = new TSendMessage(thrads,msg);
+        MessagesQUEUE.add(tmsg);
+    }
+
 
     @Override
     public boolean addUser(IUser user) {
-        if(USERS.contains(user)){
+        System.out.println(hasName(user.getName()));
+
+        if(hasName(user.getName())){
             return false;
         }else{
-            System.out.println("Usuario: " + user.getName() + " Entrou no Chat");
             USERS.add(user);
             return true;
         }
+    }
 
+    public boolean hasName(String name){
+        boolean retorno = false;
+        for(IUser user: USERS){
+            if (user.getName().equals(name)){
+                retorno = true;
+            }
+        }
+        return retorno;
     }
 
     @Override
@@ -62,6 +81,13 @@ public class Server extends UnicastRemoteObject implements IGroup {
     }
 
     @Override
+    public void sendAll() throws RemoteException, AlreadyBoundException, NotBoundException {
+        while(MessagesQUEUE.size() >0){
+            EXECS.execute(MessagesQUEUE.remove());
+        }
+    }
+
+    @Override
     public void listUsers() {
         for(Object i:USERS){
             System.out.println(i.toString());
@@ -71,6 +97,8 @@ public class Server extends UnicastRemoteObject implements IGroup {
     @Override
     public boolean addMessage(IMessage msg) throws RemoteException, AlreadyBoundException, NotBoundException {
         System.out.println(msg.getUser().getName() +":  " +msg.getMessage() + ".");
+        insertMessageOnThread(msg);
+        sendAll();
         return true;
     }
 }

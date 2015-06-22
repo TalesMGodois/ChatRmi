@@ -1,32 +1,27 @@
-package br.com.ufg.sd.chat.Server;
+package br.com.ufg.sd.chat.Client;
+
+import br.com.ufg.sd.chat.Server.Server;
 
 import java.net.InetAddress;
 import java.rmi.RMISecurityManager;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 
 /**
  * Created by tales on 13/06/15.
  */
 public class Host {
-    private int door = 1901;
+    private int door = 1902;
 
     private String ip = "127.0.1.1";
 
     private boolean isRun = false;
 
-    private String sName = "ChatService";
+    private String sName = "Receiver";
 
     private Host(int port){
         this.door = port;
-    }
-
-    public int getDoor(){
-        return this.door;
-    }
-
-    public String getIp(){
-        return this.ip;
     }
 
     /* My Singleton */
@@ -38,6 +33,14 @@ public class Host {
         return INSTANCE;
     }
 
+    public int getDoor(){
+        return this.door;
+    }
+
+    public String getIp(){
+        return this.ip;
+    }
+
     public void start() throws Exception {
 
         try {
@@ -47,16 +50,20 @@ public class Host {
             e.printStackTrace();
         }
 
-        System.out.println("Servidor " + this.sName + " Rodando(" + this.ip + ":" + this.door + ")");
-
         System.setProperty("java.rmi.server.hostname", ip);
         System.setProperty("java.security.policy", "java.policy");
         System.setSecurityManager(new RMISecurityManager());
+        try{
 
-        Registry r = LocateRegistry.createRegistry(this.door);
+            Registry r = LocateRegistry.createRegistry(this.door);
+            r.bind(sName, new Receiver());
+        }catch(ExportException e){
+            this.door = this.door +1;
+            Registry r = LocateRegistry.createRegistry(this.door);
+            r.bind(sName, new Receiver());
+        }
 
-        r.bind(sName, new Server());
-
+        System.out.println("Servidor " + this.sName + " Rodando(" + this.ip + ":" + this.door + ")");
         Object lock = new Object();
         synchronized (lock) {
             lock.wait();

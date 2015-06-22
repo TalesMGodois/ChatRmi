@@ -17,6 +17,8 @@ public interface IGroup extends Remote{
 
     public void removeAll() throws RemoteException,AlreadyBoundException,NotBoundException;
 
+    public void sendAll() throws RemoteException,AlreadyBoundException,NotBoundException;
+
     public void listUsers() throws RemoteException,AlreadyBoundException,NotBoundException;
 
     public boolean addMessage(IMessage msg)throws RemoteException,AlreadyBoundException,NotBoundException;

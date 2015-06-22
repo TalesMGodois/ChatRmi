@@ -3,6 +3,8 @@ package Common.objects;
 import Common.interfaces.IGroup;
 import Common.interfaces.IMessage;
 import Common.interfaces.IUser;
+import br.com.ufg.sd.chat.Client.Host;
+import br.com.ufg.sd.chat.Server.Server;
 
 import java.io.Serializable;
 import java.rmi.AlreadyBoundException;
@@ -73,7 +75,10 @@ public class User implements IUser,Serializable{
     public boolean sendMessage(IMessage msg) throws RemoteException, NotBoundException, AlreadyBoundException {
         Registry r = LocateRegistry.getRegistry(ip, door);
         IGroup group = (IGroup) r.lookup("ChatService");
-        msg.setuser(this);
+        msg.setUser(this);
+        msg.setDoor(Host.self().getDoor());
+        msg.setIp(Host.self().getIp());
+
         return  group.addMessage(msg);
     }
 

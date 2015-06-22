@@ -4,42 +4,45 @@ import Common.interfaces.IGroup;
 import Common.interfaces.IMessage;
 import Common.interfaces.IUser;
 
-import java.rmi.AccessException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.concurrent.Callable;
 
 /**
  * Created by tales on 13/06/15.
  */
-public class TEnvio implements Runnable {
+public class TValidUser implements Callable<Boolean> {
     private  String ip ="127.0.1.1";
     private  int door = 1901;
     private IUser user;
     private IMessage msg;
     private int send;
 
-    public TEnvio(IMessage msg){
+    public TValidUser(IMessage msg){
         this.msg = msg;
         send = 1;
     }
 
-    public TEnvio(IUser user)  {
+    public TValidUser(IUser user)  {
         this.user = user;
         send = 0;
     }
+
     @Override
-    public void run() {
+    public Boolean call() throws Exception {
+        boolean bl =  false;
         try{
             System.out.println("Entrando...");
             Registry r = LocateRegistry.getRegistry(ip, door);
             IGroup group = (IGroup) r.lookup("ChatService");
             boolean isDone = group.addUser(user);
             if (isDone == true) {
+                bl = true;
                 System.out.println("Usuário entrou no grupo");
+
             } else {
+                bl = false;
                 System.out.println("Usuário já está no grupo ou aconteceu algum erro");
             }
 
@@ -48,10 +51,13 @@ public class TEnvio implements Runnable {
             e.printStackTrace();
         } catch (AccessException e) {
             e.printStackTrace();
+        } catch (ConnectException e){
+            System.out.println("Servidor Temporariamente indisponível");
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (AlreadyBoundException e) {
             e.printStackTrace();
         }
+        return bl;
     }
 }

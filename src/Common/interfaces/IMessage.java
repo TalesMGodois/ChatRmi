@@ -13,8 +13,13 @@ public interface IMessage extends Serializable{
 
     public IUser getUser();
 
-    public  void setuser(IUser user);
+    public  void setUser(IUser user);
 
+    public void setDoor(int door);
+    public void setIp(String ip);
+
+    public int getDoor();
+    public String getIp();
 
 
 }
