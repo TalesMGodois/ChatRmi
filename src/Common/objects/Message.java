@@ -3,6 +3,8 @@ package Common.objects;
 import Common.interfaces.IMessage;
 import Common.interfaces.IUser;
 
+import java.util.Date;
+
 /**
  * Created by tales on 14/06/15.
  */
@@ -11,6 +13,7 @@ public class Message implements IMessage{
     private String msg;
     private String ip;
     private int door;
+    
 
     public String getIp() {
         return ip;

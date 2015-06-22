@@ -20,6 +20,5 @@ public class Receiver extends UnicastRemoteObject implements IReceiver {
     @Override
     public void receive(IMessage message) {
         System.out.println(message.getUser().getName() + ": " + message.getMessage());
-        System.out.printf("\n");
     }
 }

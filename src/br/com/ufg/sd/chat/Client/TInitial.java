@@ -24,8 +24,8 @@ public class TInitial extends Thread {
         Scanner input = new Scanner(System.in);
         name = input.nextLine();
         User user = new User(name);
-        System.out.println("Usuário: " + user.getName() + " Foi criado com sucesso");
-        TValidUser t = new TValidUser(user);
+        user.setDoor(Host.self().getDoor());
+        user.setIp(Host.self().getIp());
         Callable<Boolean> envio = new TValidUser(user);
         boolean isSending = envio.call();
         if(isSending){

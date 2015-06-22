@@ -33,6 +33,10 @@ public class Server extends UnicastRemoteObject implements IGroup {
 
     }
 
+    public static ArrayList<IUser> getUsers(){
+        return USERS;
+    }
+
     private void insertMessageOnThread(IMessage msg){
         thrads++;
         TSendMessage tmsg = new TSendMessage(thrads,msg);
@@ -42,12 +46,11 @@ public class Server extends UnicastRemoteObject implements IGroup {
 
     @Override
     public boolean addUser(IUser user) {
-        System.out.println(hasName(user.getName()));
-
         if(hasName(user.getName())){
             return false;
         }else{
             USERS.add(user);
+            System.out.println(user.getName()+ " Entrou no chat");
             return true;
         }
     }
@@ -81,13 +84,6 @@ public class Server extends UnicastRemoteObject implements IGroup {
     }
 
     @Override
-    public void sendAll() throws RemoteException, AlreadyBoundException, NotBoundException {
-        while(MessagesQUEUE.size() >0){
-            EXECS.execute(MessagesQUEUE.remove());
-        }
-    }
-
-    @Override
     public void listUsers() {
         for(Object i:USERS){
             System.out.println(i.toString());
@@ -96,9 +92,22 @@ public class Server extends UnicastRemoteObject implements IGroup {
 
     @Override
     public boolean addMessage(IMessage msg) throws RemoteException, AlreadyBoundException, NotBoundException {
-        System.out.println(msg.getUser().getName() +":  " +msg.getMessage() + ".");
-        insertMessageOnThread(msg);
-        sendAll();
-        return true;
+        if(hasName(msg.getUser().getName())){
+            System.out.println(msg.getUser().getName() +":  " +msg.getMessage() + ".");
+            insertMessageOnThread(msg);
+            sendAll();
+            return true;
+        }else
+            return false;
+
+    }
+
+
+
+    @Override
+    public void sendAll() throws RemoteException, AlreadyBoundException, NotBoundException {
+        while(MessagesQUEUE.size() >0){
+            EXECS.execute(MessagesQUEUE.remove());
+        }
     }
 }

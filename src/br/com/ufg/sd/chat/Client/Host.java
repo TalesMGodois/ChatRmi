@@ -12,7 +12,7 @@ import java.rmi.server.ExportException;
  * Created by tales on 13/06/15.
  */
 public class Host {
-    private int door = 1902;
+    private int door = 1905;
     private String ip = "127.0.1.1";
     private String sName = "ReceiverService";
 
@@ -47,16 +47,23 @@ public class Host {
             e.printStackTrace();
         }
 
-        System.out.println("Servidor " + this.sName + " Rodando(" + this.ip + ":" + this.door + ")");
+
 
         System.setProperty("java.rmi.server.hostname", ip);
         System.setProperty("java.security.policy", "java.policy");
         System.setSecurityManager(new RMISecurityManager());
+        try{
+            Registry r = LocateRegistry.createRegistry(this.door);
 
-        Registry r = LocateRegistry.createRegistry(this.door);
+            r.bind(sName, new Receiver());
+        }catch (ExportException e){
+            this.door++;
+            Registry r = LocateRegistry.createRegistry(this.door);
 
-        r.bind(sName, new Receiver());
+            r.bind(sName, new Receiver());
+        }
 
+        System.out.println("Servidor " + this.sName + " Rodando(" + this.ip + ":" + this.door + ")");
         Object lock = new Object();
         synchronized (lock) {
             lock.wait();

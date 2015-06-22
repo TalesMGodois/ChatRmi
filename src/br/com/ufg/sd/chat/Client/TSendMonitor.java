@@ -24,10 +24,12 @@ public class TSendMonitor implements Runnable {
             System.out.printf(">> ");
             Scanner input = new Scanner(System.in);
             String msg = input.nextLine();
-            System.out.println(msg);
             Message message = new Message(msg);
             try {
-                this.user.sendMessage(message);
+                boolean enviado = this.user.sendMessage(message);
+                if(!enviado){
+                    System.out.println("Problemas com o Servidor, é Necessário que faća o login novamente");
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             } catch (NotBoundException e) {

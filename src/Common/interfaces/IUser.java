@@ -12,6 +12,9 @@ public interface IUser  {
     public void setName(String name);
     public String  getName();
     public boolean sendMessage(IMessage msg) throws RemoteException, NotBoundException, AlreadyBoundException;
-
+    public void setIp(String ip);
+    public void setDoor(int door);
+    public int getDoor();
+    public String getIp();
 
 }

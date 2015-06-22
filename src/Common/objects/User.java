@@ -20,8 +20,7 @@ public class User implements IUser,Serializable{
     private String name;
     private String ip = "localhost";
     private String email;
-    private String host;
-    private int door = 1901;
+    private int door;
 
 
     public User(String name){
@@ -32,29 +31,13 @@ public class User implements IUser,Serializable{
         this.ip = ip;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
 
     public void setDoor(int door) {
         this.door = door;
     }
 
     public String getIp() {
-
         return ip;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getHost() {
-        return host;
     }
 
     public int getDoor() {
@@ -73,7 +56,7 @@ public class User implements IUser,Serializable{
 
     @Override
     public boolean sendMessage(IMessage msg) throws RemoteException, NotBoundException, AlreadyBoundException {
-        Registry r = LocateRegistry.getRegistry(ip, door);
+        Registry r = LocateRegistry.getRegistry("localhost", 1901);
         IGroup group = (IGroup) r.lookup("ChatService");
         msg.setUser(this);
         msg.setDoor(Host.self().getDoor());
