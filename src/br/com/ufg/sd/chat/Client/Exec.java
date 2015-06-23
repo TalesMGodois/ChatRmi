@@ -16,7 +16,6 @@ import java.util.concurrent.Callable;
 public class Exec    {
     private static boolean isValid = false;
 
-
     public static void main(String[] args) throws Exception {
         TInitial initial = new TInitial();
         initial.start();
